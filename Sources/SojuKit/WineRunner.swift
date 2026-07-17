@@ -76,6 +76,11 @@ public enum WineRunner {
         try await runAndWait(args: ["wineboot", "--init"], engine: engine, bottle: bottle)
     }
 
+    /// Set the Windows version this bottle reports to programs.
+    public static func setWindowsVersion(_ version: WindowsVersion, engine: Engine, bottle: Bottle) async throws {
+        try await runAndWait(args: ["winecfg", "/v", version.rawValue], engine: engine, bottle: bottle)
+    }
+
     /// Open the winecfg control panel (returns immediately).
     public static func winecfg(engine: Engine, bottle: Bottle) throws {
         let process = makeProcess(engine: engine, bottle: bottle, args: ["winecfg"])

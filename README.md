@@ -1,60 +1,73 @@
-# Soju
+<div align="center">
+  <img src="Resources/AppIcon.png" width="140" alt="Soju icon">
+  <h1>Soju</h1>
+  <p><i>After Whisky comes Soju</i></p>
+  <p>
+    <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/0oooh/soju/ci.yml?branch=main&label=CI" alt="CI"></a>
+    <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
+  </p>
+</div>
 
-Run Windows apps and games on your Mac — from a real Mac app.
+Run Windows apps and games on your Mac — from a real Mac app. Whisky's development ended in 2025; Soju is an open-source successor built with native SwiftUI, with one signature trick Whisky never had: it turns any Windows program into a standalone Mac app.
 
-After Whisky, Soju. Whisky's development ended in 2025; Soju is an open-source successor built with SwiftUI. It manages Wine bottles, runs Windows executables, imports your old Whisky bottles, and — its signature feature — exports any Windows program as a standalone macOS app: a real icon in your Dock and Launchpad that launches the program directly, no terminal, no manager app required.
+<div align="center">
+  <img src="docs/assets/main.png" width="650" alt="Soju main window: bottle with pinned programs">
+  <p><i>Bottles, one-click launch, and real program icons extracted straight from the exe</i></p>
+</div>
 
 ## Features
 
-- **Bottles**: self-contained Windows environments, created in one click
-- **Export as Mac app**: turn any Windows program into a standalone `.app` with its real icon (extracted from the `.exe`), launchable from Dock, Launchpad, or Spotlight — works even when Soju is not running
-- **Whisky import**: brings your existing Whisky bottles over
-- **Managed engine**: downloads the latest maintained Wine build from the [Gcenx macOS Wine builds](https://github.com/Gcenx/macOS_Wine_builds) project on first run; existing Wine or CrossOver installs are auto-detected
-- Native SwiftUI, light and dark mode, no Electron, no Homebrew required
+- **Export as a Mac app** — right-click any program, get a standalone `.app` with its real icon in your Dock, Launchpad, and Spotlight. It launches the program directly; Soju does not even need to be running.
+- **Bottles** — self-contained Windows environments, created in one click, each with its own Windows version (11, 10, 8.1, 7, XP).
+- **Whisky import** — your old Whisky bottles come over in one click.
+- **Managed engine** — Soju downloads the latest maintained Wine build from the [Gcenx macOS Wine builds](https://github.com/Gcenx/macOS_Wine_builds) project on first run. Existing Wine and CrossOver installs are detected and usable too.
+- Native SwiftUI, light and dark mode. No Electron, no Homebrew, no terminal.
 
-## Requirements
+## System Requirements
 
 - macOS 14 Sonoma or later
-- On Apple Silicon: Rosetta 2 (Soju checks and tells you the one-line install command)
+- Apple Silicon: Rosetta 2 — Soju checks for it and shows the one-line install command
+- Intel Macs supported (universal binary)
 
-## Install
+## Installation
 
-Download the latest `Soju-*.zip` from [Releases](../../releases), unzip, and move `Soju.app` to Applications.
+Download the latest `Soju-*.zip` from [Releases](../../releases), unzip, drag `Soju.app` to Applications.
 
-Builds are not notarized (no paid developer account behind this project). On first launch macOS will warn you; either right-click the app and choose Open, or run:
+Builds are not notarized (there is no paid developer account behind this project). On first launch, right-click the app and choose Open — or run `xattr -cr /Applications/Soju.app`.
+
+## Coming from Whisky
+
+Soju detects your Whisky bottles automatically — use the import button in the toolbar. Your prefixes are copied, so the originals stay untouched.
+
+## How it works
+
+Soju itself is a thin native manager; the compatibility layer is [Wine](https://www.winehq.org/). Engines live in `~/Library/Application Support/Soju/Engines`, bottles are plain Wine prefixes in `.../Soju/Bottles`. Exported Mac apps are small launcher bundles that exec Wine directly with the engine, bottle, and program paths baked in — which is why they start instantly and work on their own.
+
+## Building from source
 
 ```
-xattr -cr /Applications/Soju.app
-```
-
-## Build from source
-
-```
-git clone <this repo>
+git clone https://github.com/0oooh/soju
 cd soju
 Scripts/build-app.sh
 open build/Soju.app
 ```
 
-Requires Xcode command line tools with Swift 5.9+.
-
-## How it works
-
-Soju's own code is a thin, native manager. The heavy lifting is Wine — the open-source Windows compatibility layer — using actively maintained builds from the Gcenx project, downloaded into `~/Library/Application Support/Soju/Engines` on first run. Bottles are plain Wine prefixes stored in `.../Soju/Bottles`. Exported Mac apps are small launcher bundles that exec Wine directly with the bottle and program paths baked in, so they start instantly and independently.
+Requires Swift 5.9+ (Xcode command line tools). `swift test` runs the unit tests; `SOJU_IT=1 swift test --filter Integration` runs a full bottle lifecycle against a real engine.
 
 ## Roadmap
 
-- DXVK graphics backend (DirectX 9-11 over Vulkan/MoltenVK)
+- DXVK graphics backend (DirectX 9-11 over MoltenVK)
 - Apple Game Porting Toolkit / D3DMetal engine flavor (DirectX 12)
 - Winetricks integration
-- Per-bottle Windows version and display settings UI
+- Notarized releases
 
 ## Credits
 
 - [Wine](https://www.winehq.org/) — the compatibility layer that makes all of this possible (LGPL)
-- [Gcenx](https://github.com/Gcenx) — maintained macOS Wine builds
-- [Whisky](https://github.com/Whisky-App/Whisky) — the inspiration; rest well
+- [Gcenx](https://github.com/Gcenx) — actively maintained macOS Wine builds
+- [Whisky](https://github.com/Whisky-App/Whisky) — the inspiration for this project; rest well
 
 ## License
 
-MIT. Soju does not bundle or redistribute Wine; engines are downloaded from their upstream releases at first run.
+MIT for Soju's own code. Soju does not bundle or redistribute Wine; engines are downloaded from their upstream releases at first run.

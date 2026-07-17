@@ -31,7 +31,7 @@ struct BottleView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(bottle.meta.name)
                 .font(.title2.bold())
-            Text(state.engine(for: bottle)?.name ?? "No engine")
+            Text("\(state.engine(for: bottle)?.name ?? "No engine")  \u{00B7}  \(state.windowsVersion(of: bottle).displayName)")
                 .font(.callout)
                 .foregroundStyle(.secondary)
         }
@@ -59,6 +59,16 @@ struct BottleView: View {
             Spacer()
 
             Menu {
+                Picker("Windows Version", selection: Binding(
+                    get: { state.windowsVersion(of: bottle) },
+                    set: { state.changeWindowsVersion($0, for: bottle) }
+                )) {
+                    ForEach(WindowsVersion.allCases) { version in
+                        Text(version.displayName).tag(version)
+                    }
+                }
+                .pickerStyle(.menu)
+                Divider()
                 Button("Stop All Processes") { state.killProcesses(in: bottle) }
                 Divider()
                 Button("Delete Bottle", role: .destructive) { confirmDelete = true }

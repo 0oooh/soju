@@ -12,16 +12,35 @@ public struct Pin: Codable, Identifiable, Hashable, Sendable {
     }
 }
 
+public enum WindowsVersion: String, CaseIterable, Identifiable, Sendable {
+    case win11, win10, win81, win7, winxp
+
+    public var id: String { rawValue }
+
+    public var displayName: String {
+        switch self {
+        case .win11: return "Windows 11"
+        case .win10: return "Windows 10"
+        case .win81: return "Windows 8.1"
+        case .win7: return "Windows 7"
+        case .winxp: return "Windows XP"
+        }
+    }
+}
+
 public struct BottleMeta: Codable, Hashable, Sendable {
     public var name: String
     public var created: Date
-    public var enginePath: String?   // last engine used; nil = pick current default
+    public var enginePath: String?      // last engine used; nil = pick current default
+    public var windowsVersion: String?  // WindowsVersion rawValue; nil = wine default (win10)
     public var pins: [Pin]
 
-    public init(name: String, created: Date = .now, enginePath: String? = nil, pins: [Pin] = []) {
+    public init(name: String, created: Date = .now, enginePath: String? = nil,
+                windowsVersion: String? = nil, pins: [Pin] = []) {
         self.name = name
         self.created = created
         self.enginePath = enginePath
+        self.windowsVersion = windowsVersion
         self.pins = pins
     }
 }

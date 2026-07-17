@@ -49,10 +49,11 @@ final class AppState: ObservableObject {
 
     // MARK: - Bottles
 
-    func createBottle(name: String, engine: Engine) {
+    func createBottle(name: String, engine: Engine, windowsVersion: WindowsVersion = .win10) {
         do {
             var bottle = try BottleStore.create(name: name)
             bottle.meta.enginePath = engine.id
+            bottle.meta.windowsVersion = windowsVersion.rawValue
             try BottleStore.save(bottle)
             refresh()
             selectedBottleID = bottle.id
@@ -61,6 +62,9 @@ final class AppState: ObservableObject {
             Task {
                 do {
                     try await WineRunner.initPrefix(engine: engine, bottle: target)
+                    if windowsVersion != .win10 {   // wine's own default
+                        try await WineRunner.setWindowsVersion(windowsVersion, engine: engine, bottle: target)
+                    }
                 } catch {
                     lastError = "Bottle setup failed. \(error.localizedDescription)"
                 }
@@ -68,6 +72,24 @@ final class AppState: ObservableObject {
             }
         } catch {
             lastError = error.localizedDescription
+        }
+    }
+
+    func windowsVersion(of bottle: Bottle) -> WindowsVersion {
+        bottle.meta.windowsVersion.flatMap(WindowsVersion.init(rawValue:)) ?? .win10
+    }
+
+    func changeWindowsVersion(_ version: WindowsVersion, for bottle: Bottle) {
+        guard let engine = engine(for: bottle) else { return }
+        var updated = bottle
+        updated.meta.windowsVersion = version.rawValue
+        save(updated)
+        Task {
+            do {
+                try await WineRunner.setWindowsVersion(version, engine: engine, bottle: bottle)
+            } catch {
+                lastError = "Could not change Windows version. \(error.localizedDescription)"
+            }
         }
     }
 

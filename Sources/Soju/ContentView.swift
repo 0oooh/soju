@@ -54,6 +54,7 @@ struct ContentView: View {
                 } label: {
                     Label("New Bottle", systemImage: "plus")
                 }
+                .keyboardShortcut("n", modifiers: .command)
                 .disabled(state.engines.isEmpty)
                 .help(state.engines.isEmpty ? "Install a Wine engine first" : "Create a new bottle")
             }
@@ -152,6 +153,7 @@ struct CreateBottleSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
     @State private var engineID: String?
+    @State private var windowsVersion: WindowsVersion = .win10
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -167,6 +169,12 @@ struct CreateBottleSheet: View {
                 }
             }
 
+            Picker("Windows", selection: $windowsVersion) {
+                ForEach(WindowsVersion.allCases) { version in
+                    Text(version.displayName).tag(version)
+                }
+            }
+
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }
@@ -175,7 +183,8 @@ struct CreateBottleSheet: View {
                     if let engine {
                         state.createBottle(
                             name: name.trimmingCharacters(in: .whitespaces),
-                            engine: engine
+                            engine: engine,
+                            windowsVersion: windowsVersion
                         )
                     }
                     dismiss()
