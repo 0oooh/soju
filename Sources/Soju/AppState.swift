@@ -29,6 +29,7 @@ final class AppState: ObservableObject {
     func refresh() {
         bottles = BottleStore.load()
         engines = EngineStore.discover()
+        autopinSteam()
         if selectedBottleID == nil || !bottles.contains(where: { $0.id == selectedBottleID }) {
             selectedBottleID = bottles.first?.id
         }
@@ -40,6 +41,18 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Once Steam finishes installing, surface it as a pinned program.
+    private func autopinSteam() {
+        for var bottle in bottles {
+            guard let steam = SteamInstaller.steamExe(in: bottle),
+                  !bottle.meta.pins.contains(where: { $0.exePath == steam.path })
+            else { continue }
+            bottle.meta.pins.append(Pin(name: "Steam", exePath: steam.path))
+            try? BottleStore.save(bottle)
+        }
+        bottles = BottleStore.load()
+    }
+
     func engine(for bottle: Bottle) -> Engine? {
         if let path = bottle.meta.enginePath, let match = engines.first(where: { $0.id == path }) {
             return match
@@ -49,7 +62,8 @@ final class AppState: ObservableObject {
 
     // MARK: - Bottles
 
-    func createBottle(name: String, engine: Engine, windowsVersion: WindowsVersion = .win10) {
+    func createBottle(name: String, engine: Engine, windowsVersion: WindowsVersion = .win10,
+                      koreanFonts: Bool = true) {
         do {
             var bottle = try BottleStore.create(name: name)
             bottle.meta.enginePath = engine.id
@@ -65,6 +79,9 @@ final class AppState: ObservableObject {
                     if windowsVersion != .win10 {   // wine's own default
                         try await WineRunner.setWindowsVersion(windowsVersion, engine: engine, bottle: target)
                     }
+                    if koreanFonts {
+                        try await CJKFonts.install(into: target, engine: engine)
+                    }
                 } catch {
                     lastError = "Bottle setup failed. \(error.localizedDescription)"
                 }
@@ -72,6 +89,32 @@ final class AppState: ObservableObject {
             }
         } catch {
             lastError = error.localizedDescription
+        }
+    }
+
+    func installKoreanFonts(in bottle: Bottle) {
+        guard let engine = engine(for: bottle) else { return }
+        Task {
+            do {
+                try await CJKFonts.install(into: bottle, engine: engine)
+                refresh()
+            } catch {
+                lastError = "Korean font install failed. \(error.localizedDescription)"
+            }
+        }
+    }
+
+    func installSteam(in bottle: Bottle) {
+        guard let engine = engine(for: bottle) else {
+            lastError = "No Wine engine installed."
+            return
+        }
+        Task {
+            do {
+                try await SteamInstaller.run(engine: engine, bottle: bottle)
+            } catch {
+                lastError = "Steam installer failed to start. \(error.localizedDescription)"
+            }
         }
     }
 
@@ -173,11 +216,11 @@ final class AppState: ObservableObject {
 
     // MARK: - Engine install
 
-    func installEngine() {
+    func installEngine(_ flavor: EngineFlavor = .wineStaging) {
         engineSetup = .downloading(0)
         Task {
             do {
-                let release = try await EngineDownloader.latestRelease()
+                let release = try await EngineDownloader.latestRelease(flavor)
                 _ = try await EngineDownloader.install(release) { received, total in
                     let fraction = total > 0 ? Double(received) / Double(total) : 0
                     Task { @MainActor in

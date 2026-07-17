@@ -48,16 +48,19 @@ struct EngineSheet: View {
 
         case .none:
             VStack(alignment: .leading, spacing: 10) {
-                Text("Soju needs a Wine engine to run Windows software. It downloads the latest maintained build from the Gcenx project (about 400 MB) and keeps it inside Soju's own folder.")
+                Text("Soju needs a Wine engine to run Windows software. Engines are downloaded from their upstream releases and kept inside Soju's own folder.")
                     .foregroundStyle(.secondary)
                 Button {
-                    state.installEngine()
+                    state.installEngine(.wineStaging)
                 } label: {
                     Label("Install Wine Engine", systemImage: "arrow.down.circle")
                         .padding(.horizontal, 4)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                Text("You can add the DirectX 12 engine (Game Porting Toolkit) here later.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
         case .downloading(let fraction):
@@ -88,8 +91,19 @@ struct EngineSheet: View {
                     }
                 }
                 Divider()
-                Button("Download Latest Engine") { state.installEngine() }
-                    .help("Fetch the newest Gcenx wine-staging build")
+                ForEach(EngineFlavor.allCases) { flavor in
+                    HStack(alignment: .firstTextBaseline) {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(flavor.displayName)
+                            Text(flavor.summary)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Button("Install") { state.installEngine(flavor) }
+                            .controlSize(.small)
+                    }
+                }
             }
         }
     }

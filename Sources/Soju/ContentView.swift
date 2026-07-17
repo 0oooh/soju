@@ -154,6 +154,7 @@ struct CreateBottleSheet: View {
     @State private var name = ""
     @State private var engineID: String?
     @State private var windowsVersion: WindowsVersion = .win10
+    @State private var koreanFonts = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -175,6 +176,9 @@ struct CreateBottleSheet: View {
                 }
             }
 
+            Toggle("Korean font fix", isOn: $koreanFonts)
+                .help("Installs Noto Sans CJK KR so Korean text renders instead of boxes")
+
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }
@@ -184,7 +188,8 @@ struct CreateBottleSheet: View {
                         state.createBottle(
                             name: name.trimmingCharacters(in: .whitespaces),
                             engine: engine,
-                            windowsVersion: windowsVersion
+                            windowsVersion: windowsVersion,
+                            koreanFonts: koreanFonts
                         )
                     }
                     dismiss()

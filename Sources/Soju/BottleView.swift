@@ -56,6 +56,12 @@ struct BottleView: View {
             Button("Wine Settings") { state.winecfg(bottle) }
                 .controlSize(.large)
 
+            if SteamInstaller.steamExe(in: bottle) == nil {
+                Button("Install Steam") { state.installSteam(in: bottle) }
+                    .controlSize(.large)
+                    .help("Downloads the official installer from Valve and runs it in this bottle")
+            }
+
             Spacer()
 
             Menu {
@@ -69,6 +75,8 @@ struct BottleView: View {
                 }
                 .pickerStyle(.menu)
                 Divider()
+                Button("Install Korean Fonts") { state.installKoreanFonts(in: bottle) }
+                    .disabled(CJKFonts.isInstalled(in: bottle))
                 Button("Stop All Processes") { state.killProcesses(in: bottle) }
                 Divider()
                 Button("Delete Bottle", role: .destructive) { confirmDelete = true }

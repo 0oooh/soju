@@ -1,5 +1,42 @@
 import Foundation
 
+/// Engine builds Soju can download. Both come from upstream GitHub releases at
+/// the user's request; nothing proprietary is bundled with Soju itself.
+public enum EngineFlavor: String, CaseIterable, Identifiable, Sendable {
+    case wineStaging = "wine-staging"
+    case gptk = "game-porting-toolkit"
+
+    public var id: String { rawValue }
+
+    public var displayName: String {
+        switch self {
+        case .wineStaging: return "Wine Staging"
+        case .gptk: return "Game Porting Toolkit"
+        }
+    }
+
+    public var summary: String {
+        switch self {
+        case .wineStaging: return "General-purpose engine for apps and DirectX 9-11 games."
+        case .gptk: return "Apple's D3DMetal engine for DirectX 12 games. Community build by Gcenx."
+        }
+    }
+
+    var repo: String {
+        switch self {
+        case .wineStaging: return "Gcenx/macOS_Wine_builds"
+        case .gptk: return "Gcenx/game-porting-toolkit"
+        }
+    }
+
+    func matches(assetName: String) -> Bool {
+        switch self {
+        case .wineStaging: return assetName.hasPrefix("wine-staging-") && assetName.hasSuffix("osx64.tar.xz")
+        case .gptk: return assetName.hasPrefix("game-porting-toolkit") && assetName.hasSuffix(".tar.xz")
+        }
+    }
+}
+
 public struct EngineRelease: Sendable {
     public let version: String        // e.g. "wine-staging-11.10"
     public let downloadURL: URL
@@ -12,14 +49,13 @@ public enum EngineDownloadError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .noAsset: return "No wine-staging build found in the latest Gcenx release."
+        case .noAsset: return "No matching build found in the latest release."
         case .badArchive(let detail): return "Engine archive could not be installed: \(detail)"
         }
     }
 }
 
 public enum EngineDownloader {
-    static let releaseAPI = URL(string: "https://api.github.com/repos/Gcenx/macOS_Wine_builds/releases/latest")!
 
     /// True when x86_64 wine binaries can run on this machine.
     public static func isRosettaAvailable() -> Bool {
@@ -40,26 +76,25 @@ public enum EngineDownloader {
         #endif
     }
 
-    public static func latestRelease() async throws -> EngineRelease {
-        var request = URLRequest(url: releaseAPI)
+    public static func latestRelease(_ flavor: EngineFlavor = .wineStaging) async throws -> EngineRelease {
+        var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(flavor.repo)/releases/latest")!)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         let (data, _) = try await URLSession.shared.data(for: request)
 
         struct Release: Decodable {
             struct Asset: Decodable { let name: String; let browser_download_url: URL; let size: Int64 }
-            let tag_name: String
             let assets: [Asset]
         }
         let release = try JSONDecoder().decode(Release.self, from: data)
-        guard let asset = release.assets.first(where: {
-            $0.name.hasPrefix("wine-staging-") && $0.name.hasSuffix("osx64.tar.xz")
-        }) else { throw EngineDownloadError.noAsset }
+        guard let asset = release.assets.first(where: { flavor.matches(assetName: $0.name) }) else {
+            throw EngineDownloadError.noAsset
+        }
 
-        return EngineRelease(
-            version: "wine-staging-\(release.tag_name)",
-            downloadURL: asset.browser_download_url,
-            size: asset.size
-        )
+        var version = asset.name
+        for suffix in [".tar.xz", "-osx64"] where version.hasSuffix(suffix) || version.contains(suffix) {
+            version = version.replacingOccurrences(of: suffix, with: "")
+        }
+        return EngineRelease(version: version, downloadURL: asset.browser_download_url, size: asset.size)
     }
 
     /// Download and install an engine. Progress is reported as (received, total) bytes.

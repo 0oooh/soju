@@ -20,8 +20,10 @@ Run Windows apps and games on your Mac — from a real Mac app. Whisky's develop
 
 - **Export as a Mac app** — right-click any program, get a standalone `.app` with its real icon in your Dock, Launchpad, and Spotlight. It launches the program directly; Soju does not even need to be running.
 - **Bottles** — self-contained Windows environments, created in one click, each with its own Windows version (11, 10, 8.1, 7, XP).
+- **Two engines** — [Wine Staging](https://github.com/Gcenx/macOS_Wine_builds) for general use, and Apple's [Game Porting Toolkit](https://github.com/Gcenx/game-porting-toolkit) (D3DMetal) for DirectX 12 games. Both download from their upstream releases on demand; existing Wine and CrossOver installs are detected too.
+- **Install Steam in one click** — Soju fetches the official installer from Valve's CDN and runs it in your bottle.
+- **Korean font fix** — new bottles get Noto Sans CJK KR and the right font mappings, so Korean text renders instead of boxes. On by default, optional.
 - **Whisky import** — your old Whisky bottles come over in one click.
-- **Managed engine** — Soju downloads the latest maintained Wine build from the [Gcenx macOS Wine builds](https://github.com/Gcenx/macOS_Wine_builds) project on first run. Existing Wine and CrossOver installs are detected and usable too.
 - Native SwiftUI, light and dark mode. No Electron, no Homebrew, no terminal.
 
 ## System Requirements
@@ -57,8 +59,8 @@ Requires Swift 5.9+ (Xcode command line tools). `swift test` runs the unit tests
 
 ## Roadmap
 
-- DXVK graphics backend (DirectX 9-11 over MoltenVK)
-- Apple Game Porting Toolkit / D3DMetal engine flavor (DirectX 12)
+- DXMT and DXVK graphics backends (faster DirectX 11 on Metal)
+- Community game recipes — known-good settings per game, applied in one click
 - Winetricks integration
 - Notarized releases
 
