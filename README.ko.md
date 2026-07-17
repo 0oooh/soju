@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
   </p>
-  <p><a href="README.md">English</a> | 한국어</p>
+  <p><a href="README.md">English</a> | 한국어 | <a href="README.ja.md">日本語</a></p>
 </div>
 
 맥에서 윈도우 앱과 게임을 — 진짜 맥 앱처럼 실행하세요. Whisky의 개발이 2025년에 중단된 뒤, Soju는 네이티브 SwiftUI로 만든 오픈소스 후계자입니다. Whisky에는 없던 대표 기능이 하나 있습니다: 어떤 윈도우 프로그램이든 독립 실행되는 맥 앱으로 만들어 줍니다.
@@ -23,14 +23,8 @@
 - **보틀** — 클릭 한 번으로 만드는 독립 윈도우 환경. 보틀마다 윈도우 버전(11, 10, 8.1, 7, XP)을 따로 설정할 수 있습니다.
 - **엔진 두 종류** — 일반용 [Wine Staging](https://github.com/Gcenx/macOS_Wine_builds), 그리고 DirectX 12 게임용 애플 [Game Porting Toolkit](https://github.com/Gcenx/game-porting-toolkit)(D3DMetal). 둘 다 필요할 때 업스트림 릴리즈에서 내려받으며, 이미 설치된 Wine이나 CrossOver도 자동 인식합니다.
 - **스팀 원클릭 설치** — Valve 공식 CDN에서 설치 파일을 받아 보틀 안에서 바로 실행해 줍니다.
-- **한글 폰트 픽스** — 새 보틀에 Noto Sans CJK KR과 폰트 매핑(맑은 고딕, 굴림 등)이 자동으로 들어가서, 한글이 네모(두부)로 깨지지 않습니다. 기본 켜짐, 끌 수 있음.
 - **Whisky 가져오기** — 쓰던 Whisky 보틀을 클릭 한 번에 옮겨 옵니다.
 - 네이티브 SwiftUI, 라이트/다크 모드. Electron 없음, Homebrew 없음, 터미널 없음.
-
-<div align="right">
-  <img src="docs/assets/korean-fonts.png" width="520" alt="Wine 메모장에서 한글이 정상 렌더링되는 모습">
-  <p><i>한글이 처음부터 제대로 나옵니다 — 두부 없음</i></p>
-</div>
 
 ## 시스템 요구사항
 

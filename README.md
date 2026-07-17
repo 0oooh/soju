@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
   </p>
-  <p>English | <a href="README.ko.md">한국어</a></p>
+  <p>English | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a></p>
 </div>
 
 Run Windows apps and games on your Mac — from a real Mac app. Whisky's development ended in 2025; Soju is an open-source successor built with native SwiftUI, with one signature trick Whisky never had: it turns any Windows program into a standalone Mac app.
@@ -23,14 +23,8 @@ Run Windows apps and games on your Mac — from a real Mac app. Whisky's develop
 - **Bottles** — self-contained Windows environments, created in one click, each with its own Windows version (11, 10, 8.1, 7, XP).
 - **Two engines** — [Wine Staging](https://github.com/Gcenx/macOS_Wine_builds) for general use, and Apple's [Game Porting Toolkit](https://github.com/Gcenx/game-porting-toolkit) (D3DMetal) for DirectX 12 games. Both download from their upstream releases on demand; existing Wine and CrossOver installs are detected too.
 - **Install Steam in one click** — Soju fetches the official installer from Valve's CDN and runs it in your bottle.
-- **Korean font fix** — new bottles get Noto Sans CJK KR and the right font mappings, so Korean text renders instead of boxes. On by default, optional.
 - **Whisky import** — your old Whisky bottles come over in one click.
 - Native SwiftUI, light and dark mode. No Electron, no Homebrew, no terminal.
-
-<div align="right">
-  <img src="docs/assets/korean-fonts.png" width="520" alt="Wine Notepad rendering Korean text correctly">
-  <p><i>Korean text works out of the box — no more empty boxes</i></p>
-</div>
 
 ## System Requirements
 
