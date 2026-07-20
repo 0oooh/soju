@@ -1,7 +1,7 @@
 <div align="center">
   <img src="Resources/AppIcon.png" width="140" alt="Soju アイコン">
   <h1>Soju</h1>
-  <p><i>ウイスキーの次はソジュ</i></p>
+  <p><i>Windows のアプリやゲームを、本物の Mac アプリに</i></p>
   <p>
     <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/0oooh/soju/ci.yml?branch=main&label=CI" alt="CI"></a>
     <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
@@ -10,7 +10,7 @@
   <p><a href="README.md">English</a> | <a href="README.ko.md">한국어</a> | 日本語</p>
 </div>
 
-Mac で Windows のアプリやゲームを — 本物の Mac アプリのように。Whisky の開発は 2025 年に終了しました。Soju はネイティブ SwiftUI で作られたオープンソースの後継です。Whisky にはなかった目玉機能がひとつあります: どんな Windows プログラムでも、単体で動く Mac アプリに変換できます。
+Soju は Wine を使って macOS で Windows のアプリやゲームを動かします — VM なし、サブスクリプションなし、ターミナルなし。目玉機能は、どんな Windows プログラムでも単体で動く Mac アプリとして書き出せること。Dock にアイコンが並び、Soju が閉じていてもダブルクリックで起動します。開発が終了した Whisky から移行する場合は、ボトルをワンクリックで取り込めます。
 
 <div align="center">
   <img src="docs/assets/main.png" width="650" alt="Soju メイン画面: ボトルとピン留めしたプログラム">

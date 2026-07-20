@@ -1,7 +1,7 @@
 <div align="center">
   <img src="Resources/AppIcon.png" width="140" alt="Soju 아이콘">
   <h1>Soju</h1>
-  <p><i>위스키 다음은 소주</i></p>
+  <p><i>윈도우 앱과 게임을 진짜 맥 앱으로</i></p>
   <p>
     <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/0oooh/soju/ci.yml?branch=main&label=CI" alt="CI"></a>
     <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
@@ -10,7 +10,7 @@
   <p><a href="README.md">English</a> | 한국어 | <a href="README.ja.md">日本語</a></p>
 </div>
 
-맥에서 윈도우 앱과 게임을 — 진짜 맥 앱처럼 실행하세요. Whisky의 개발이 2025년에 중단된 뒤, Soju는 네이티브 SwiftUI로 만든 오픈소스 후계자입니다. Whisky에는 없던 대표 기능이 하나 있습니다: 어떤 윈도우 프로그램이든 독립 실행되는 맥 앱으로 만들어 줍니다.
+Soju는 Wine으로 macOS에서 윈도우 앱과 게임을 실행합니다 — VM 없이, 구독 없이, 터미널 없이. 대표 기능은 어떤 윈도우 프로그램이든 독립 실행되는 맥 앱으로 내보내는 것: Dock에 아이콘이 생기고, Soju가 꺼져 있어도 더블클릭으로 바로 실행됩니다. 개발이 중단된 Whisky를 쓰고 있었다면 보틀을 클릭 한 번에 가져올 수 있습니다.
 
 <div align="center">
   <img src="docs/assets/main.png" width="650" alt="Soju 메인 화면: 보틀과 고정된 프로그램">

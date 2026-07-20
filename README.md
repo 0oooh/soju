@@ -1,7 +1,7 @@
 <div align="center">
   <img src="Resources/AppIcon.png" width="140" alt="Soju icon">
   <h1>Soju</h1>
-  <p><i>After Whisky comes Soju</i></p>
+  <p><i>Turn Windows apps and games into real Mac apps</i></p>
   <p>
     <a href="../../actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/0oooh/soju/ci.yml?branch=main&label=CI" alt="CI"></a>
     <img src="https://img.shields.io/badge/macOS-14%2B-blue" alt="macOS 14+">
@@ -10,7 +10,7 @@
   <p>English | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a></p>
 </div>
 
-Run Windows apps and games on your Mac — from a real Mac app. Whisky's development ended in 2025; Soju is an open-source successor built with native SwiftUI, with one signature trick Whisky never had: it turns any Windows program into a standalone Mac app.
+Soju runs Windows apps and games on macOS through Wine — no VM, no subscription, no terminal. Its signature trick: export any Windows program as a standalone Mac app that lives in your Dock and launches with a double-click, even when Soju is closed. Coming from the discontinued Whisky? Soju imports your bottles in one click.
 
 <div align="center">
   <img src="docs/assets/main.png" width="650" alt="Soju main window: bottle with pinned programs">
