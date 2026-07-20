@@ -1,6 +1,6 @@
 # Soju wiki index
 
-LLM-maintained wiki for the Soju project. See CLAUDE.md for maintenance rules.
+LLM-maintained wiki for the Soju project.
 
 ## Pages
 
