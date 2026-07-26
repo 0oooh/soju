@@ -14,6 +14,10 @@ Name "Soju"; engine from Gcenx/macOS_Wine_builds releases (wine-staging 11.10 cu
 
 SPM package (SojuKit + Soju + tests), CLAUDE.md schema, design language, MIT license, git initialized.
 
+## [2026-07-20] decision | Microphone and camera usage descriptions are mandatory in every bundle we generate
+
+Bug found while a maintainer tested voice input in a Godot game under Soju: the game logged `WASAPI: init_input_device error` / `ERR_CANT_OPEN` at every unmute. Root cause was ours, not Wine's — macOS attributes a child process's TCC requests to the responsible app bundle, and neither Soju.app nor exported wrapper apps declared `NSMicrophoneUsageDescription`. Verified the mechanism with an A/B experiment: an app bundle without the key has its child process SIGKILLed the instant `AVCaptureSession.startRunning()` is called, while an otherwise identical bundle with the key streams audio normally (282 buffers in 3 s). After adding mic and camera usage descriptions to `Scripts/build-app.sh` and `AppExporter`, the same game went from 2 audio errors to 0 and reported `speaking=true`, meaning real microphone audio reached it. Rule going forward: any bundle Soju generates must declare every TCC-gated capability a Windows program might use, because the guest program cannot prompt for itself.
+
 ## [2026-07-18] milestone | v0.2.0: GPTK engine flavor, Korean font fix, Steam one-click
 
 Published as 0oooh/soju (public, v0.1.0 released with zip via Actions). v0.2.0 adds: second engine flavor (Gcenx Game Porting Toolkit 3.0-3 for DX12, runtime-downloaded; verified download+extract+prefix boot in 69 s), Korean font fix (Noto Sans CJK KR + 14 FontSubstitutes entries; verified visually — wine notepad renders hangul cleanly), Install Steam button (official Valve CDN installer; verified the setup wizard runs in a bottle), per-bottle Windows version (winecfg /v verified via registry), Whisky-style README. Legal boundaries recorded in decisions/004. Community already sharing the repo link on the maintainer's Discord within hours of publish.

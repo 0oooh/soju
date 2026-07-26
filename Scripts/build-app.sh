@@ -41,6 +41,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>LSApplicationCategoryType</key><string>public.app-category.utilities</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSHumanReadableCopyright</key><string>MIT License</string>
+    <key>NSMicrophoneUsageDescription</key><string>Windows programs run by Soju need this to use your microphone.</string>
+    <key>NSCameraUsageDescription</key><string>Windows programs run by Soju need this to use your camera.</string>
 </dict>
 </plist>
 PLIST

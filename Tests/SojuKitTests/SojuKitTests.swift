@@ -21,6 +21,28 @@ final class SojuKitTests: XCTestCase {
         XCTAssertEqual(AppExporter.sanitized("   "), "Windows App")
     }
 
+    /// macOS kills the wine process outright when a Windows program opens the mic
+    /// or camera and the responsible bundle has no usage description, so every
+    /// wrapper we generate must declare them.
+    func testExportedWrapperDeclaresCaptureUsage() throws {
+        let temp = FileManager.default.temporaryDirectory
+            .appendingPathComponent("soju-export-test-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: temp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temp) }
+
+        let bottle = Bottle(url: temp.appendingPathComponent("bottle"), meta: BottleMeta(name: "Test"))
+        let engine = Engine(name: "Test", wineBin: URL(fileURLWithPath: "/usr/bin/true"), source: .detected)
+        let pin = Pin(name: "Voice Chat Game", exePath: "/tmp/game.exe")
+
+        let app = try AppExporter.export(pin: pin, bottle: bottle, engine: engine, to: temp)
+        let data = try Data(contentsOf: app.appendingPathComponent("Contents/Info.plist"))
+        let plist = try XCTUnwrap(
+            PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any]
+        )
+        XCTAssertNotNil(plist["NSMicrophoneUsageDescription"])
+        XCTAssertNotNil(plist["NSCameraUsageDescription"])
+    }
+
     func testPEIconRejectsGarbage() {
         let garbage = Data(repeating: 0x41, count: 4096)
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("garbage.exe")

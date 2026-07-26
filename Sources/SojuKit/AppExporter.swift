@@ -28,6 +28,10 @@ public enum AppExporter {
             "CFBundleShortVersionString": "1.0",
             "LSMinimumSystemVersion": "11.0",
             "NSHighResolutionCapable": true,
+            // Without these, macOS kills the wine process the moment the program
+            // opens a mic or camera, instead of prompting the user.
+            "NSMicrophoneUsageDescription": "\(pin.name) needs this to use your microphone.",
+            "NSCameraUsageDescription": "\(pin.name) needs this to use your camera.",
         ]
         let plistData = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
         try plistData.write(to: contents.appendingPathComponent("Info.plist"))
